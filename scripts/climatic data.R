@@ -76,6 +76,9 @@ for (i in 1:nrow(traits)) {
   }
 }
 
+# save
+write.table(traits, 'results/trait_final.txt')
+
 temp <- traits[,c('origin','invasiveness','counts','climatic_div','climatic_ric')] %>% na.omit()
 temp <- temp %>% pivot_longer(3:5)
 temp$invasiveness <- as.factor(temp$invasiveness)
