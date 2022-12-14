@@ -65,7 +65,7 @@ summary(climatic_pca)
 climatic_pca <- climatic_pca$x[,1:3] %>% as.data.frame()
 climatic_pca$species <- climatic$species
 
-# mpd to compute climatic diversity
+# mpd and convex hull of the climatic niche
 traits$climatic_div <- NA
 traits$climatic_ric <- NA
 for (i in 1:nrow(traits)) {
