@@ -6,7 +6,7 @@ source("scripts/import traits.R")
 # species
 occurrences <- traits
 
-# remove entries without epitet
+# remove entries without epithet
 occurrences <- occurrences[stringr::str_count(occurrences$species, " ")==1,]
 
 # fixed names for gbif

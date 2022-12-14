@@ -88,45 +88,53 @@ traits$SRL[traits$SRL > 17000] <- NA
 traits$height <- log(traits$height)
 traits$seed_weight <- log(traits$seed_weight)
 
+# pairs
+pairs(traits[,v_quantitative], lower.panel=NULL)
+
 
 # plots traits cuantitativos
 temp <- traits %>% dplyr::select(origin, invasiveness, all_of(v_quantitative)) %>%
   gather(all_of(v_quantitative), key='trait', value='value') %>% na.omit()
+temp$trait <- as.factor(temp$trait)
+temp$trait <- factor(temp$trait,levels=c("onset_flowering","length_bloom","height","seed_weight",
+                                         "SLA","LDMC","LCC","LNC","dC13","dN15",
+                                         "SRL","SRA","RDMC","RD","numb_disp"))
+
+# origin
 ggplot(data=temp, aes(x=origin, y=value, fill=origin)) + geom_boxplot() +
-  facet_wrap(~trait, scale="free") + xlab('') + theme_classic() +
-  theme(legend.position='top', legend.title=element_blank(), axis.text=element_blank()) +
+  facet_wrap(~trait, scale="free_y") + xlab('') + theme_classic() +
+  theme(legend.position='top', legend.title=element_blank(), axis.text.x=element_blank()) +
   scale_fill_manual(values=c('lightgreen','coral1'))
 # sign
 for (tr in v_quantitative) {
   temp <- na.omit(traits[,c(tr,'origin')])
-  temp <- wilcox.test(temp[temp$origin=='native',tr], temp[temp$origin=='colonizer',tr])
+  temp <- t.test(temp[temp$origin=='native',tr], temp[temp$origin=='colonizer',tr])
   print(paste('The p-value of', tr, 'is', round(temp$p.value,3)))
 }
 
-temp <- traits %>% dplyr::select(invasiveness, all_of(v_quantitative)) %>%
-  gather(all_of(v_quantitative), key='trait', value='value') %>% na.omit()
+# invasiveness
 ggplot(data=temp, aes(x=invasiveness, y=value, fill=invasiveness)) + geom_boxplot() +
   facet_wrap(~trait, scale="free") + xlab('') + theme_classic() +
-  theme(legend.position='top', legend.title=element_blank(), axis.text=element_blank()) +
+  theme(legend.position='top', legend.title=element_blank(), axis.text.x=element_blank()) +
   scale_fill_manual(values=c('lightgreen','coral1','gold'))
 # sign
 for (tr in v_quantitative) {
   temp <- na.omit(traits[,c(tr,'invasiveness')])
-  temp <- kruskal.test(temp[,tr] ~ temp$invasiveness)
-  print(paste('The p-value of', tr, 'is', round(temp$p.value,3)))
+  temp <- lm(temp[,tr] ~ temp$invasiveness) %>% anova()
+  print(paste('The p-value of', tr, 'is', round(temp$`Pr(>F)`[1],3)))
 }
 
 
 # plots traits cualitativos
 v_qualitative
 
-chisq.test(table(traits$pollination, traits$origin)[c('insect','wind'),]) # remove selfed
+table(traits$pollination, traits$invasiveness)[c('insect','wind'),] %>% chisq.test()
 
-table(traits$self.compatible, traits$origin) %>% chisq.test()
-table(traits$archaeophyte, traits$origin) %>% chisq.test()
+table(traits$self.compatible, traits$invasiveness) %>% chisq.test()
+table(traits$archaeophyte, traits$invasiveness) %>% chisq.test()
 
-table(traits$agochory, traits$origin) %>% chisq.test()
-table(traits$anemochory, traits$origin) %>% chisq.test()
-table(traits$autochory, traits$origin) %>% chisq.test()
-table(traits$hydrochory, traits$origin) %>% chisq.test()
-table(traits$zoochory, traits$origin) %>% chisq.test()
+table(traits$agochory, traits$invasiveness) %>% chisq.test()
+table(traits$anemochory, traits$invasiveness) %>% chisq.test()
+table(traits$autochory, traits$invasiveness) %>% chisq.test()
+table(traits$hydrochory, traits$invasiveness) %>% chisq.test()
+table(traits$zoochory, traits$invasiveness) %>% chisq.test()

@@ -1,6 +1,7 @@
 
 library(terra)
 library(mapSpain)
+library(geometry)
 source('scripts/import traits.R')
 occurrences <- read.csv("results/occurrences.txt", sep="")
 myoccurrences_df <- read.csv("results/myoccurrences_df.txt", sep="")
@@ -60,25 +61,28 @@ climatic$species <- myoccurrences_pt$species
 var_in <- c('species','bio_1','bio_5','bio_7','bio_12','bio_14','bio_15')
 climatic <- climatic[,var_in] %>% na.omit()
 climatic_pca <- prcomp(climatic[,-1], scale=T, center=T)
+summary(climatic_pca)
 climatic_pca <- climatic_pca$x[,1:3] %>% as.data.frame()
 climatic_pca$species <- climatic$species
 
 # mpd to compute climatic diversity
 traits$climatic_div <- NA
+traits$climatic_ric <- NA
 for (i in 1:nrow(traits)) {
   temp <- climatic_pca %>% filter(species == traits$species[i]) %>% dplyr::select(PC1,PC2,PC3)
-  traits$climatic_div[i] <- dist(temp) %>% mean()
+  if (nrow(temp)>1) {
+    traits$climatic_div[i] <- dist(temp) %>% mean()
+    traits$climatic_ric[i] <- convhulln(temp, output.options=T)$vol
+  }
 }
 
-# plots
-# par(mfrow=c(2,2), mar=c(4,4,1,4))
-
-temp <- traits[,c('origin','invasiveness','counts','climatic_div')] %>% na.omit()
-ggplot(aes(x=origin, y=log(counts)), data=temp) + geom_boxplot() + theme_classic()
-ggplot(aes(x=origin, y=climatic_div), data=temp) + geom_boxplot() + theme_classic()
-ggplot(aes(x=invasiveness, y=log(counts)), data=temp) + geom_boxplot() + theme_classic()
-ggplot(aes(x=invasiveness, y=climatic_div), data=temp) + geom_boxplot() + theme_classic()
-
-boxplot(log(counts) ~ numb_disp, data=na.omit(traits[,c('origin','counts','numb_disp')]), xlab=NULL)
-
-
+temp <- traits[,c('origin','invasiveness','counts','climatic_div','climatic_ric')] %>% na.omit()
+temp <- temp %>% pivot_longer(3:5)
+temp$invasiveness <- as.factor(temp$invasiveness)
+temp$name <- as.factor(temp$name)
+temp$name <- factor(temp$name, levels=c("counts","climatic_ric","climatic_div"))
+levels(temp$name) <- c('frequency','climatic niche richness','climatic niche diversity')
+ggplot(aes(x=invasiveness, y=value, fill=invasiveness), data=temp) + geom_boxplot() +
+  facet_wrap(~name, scales='free_y') + theme_classic() + xlab('') + ylab('') +
+  theme(legend.position='top', legend.title=element_blank(), axis.text.x=element_blank()) +
+  scale_fill_manual(values=c('lightgreen','coral1','gold'))
