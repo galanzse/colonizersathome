@@ -56,7 +56,7 @@ rf1
 plot(rf1)
 rf1$importance
 
-varImpPlot(rf1)
+varImpPlot(rf1, n.var=15, main='Origin ~')
 
 pred = predict(rf1, newdata=test[-which(colnames(train)=='invasiveness')]) # cross-validation
 (cm = table(test[,'origin'], pred))
@@ -70,7 +70,7 @@ rf1
 plot(rf1)
 rf1$importance
 
-varImpPlot(rf1)
+varImpPlot(rf1, n.var=15, main='Invasiveness ~')
 
 pred = predict(rf1, newdata=test[-which(colnames(train)=='origin')]) # cross-validation
 (cm = table(test[,'invasiveness'], pred))
