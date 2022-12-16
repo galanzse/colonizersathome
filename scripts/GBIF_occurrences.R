@@ -1,7 +1,7 @@
 
 library(rgbif)
 library(terra)
-source("scripts/import traits.R")
+source('scripts/import traits and tree.R')
 
 # species
 occurrences <- traits

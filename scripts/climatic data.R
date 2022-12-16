@@ -2,7 +2,7 @@
 library(terra)
 library(mapSpain)
 library(geometry)
-source('scripts/import traits.R')
+source('scripts/import traits and tree.R')
 occurrences <- read.csv("results/occurrences.txt", sep="")
 myoccurrences_df <- read.csv("results/myoccurrences_df.txt", sep="")
 
@@ -78,6 +78,10 @@ for (i in 1:nrow(traits)) {
 
 # save
 write.table(traits, 'results/trait_final.txt')
+
+lm(log(traits$counts) ~ traits$invasiveness) %>% aov() %>% TukeyHSD(conf.level=.95)
+lm(traits$climatic_ric ~ traits$invasiveness) %>% aov() %>% TukeyHSD(conf.level=.95)
+lm(traits$climatic_div ~ traits$invasiveness) %>% aov() %>% TukeyHSD(conf.level=.95)
 
 temp <- traits[,c('origin','invasiveness','counts','climatic_div','climatic_ric')] %>% na.omit()
 temp <- temp %>% pivot_longer(3:5)

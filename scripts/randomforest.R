@@ -2,11 +2,11 @@
 library(tidyverse)
 library(randomForest)
 library(caTools)
-library(party)
 
 # exploratory
 data <- read.csv("results/trait_final.txt", sep="")
 str(data)
+data$tree_species <- NULL
 
 # format variables
 data$family <- as.factor(data$family)
@@ -55,7 +55,6 @@ rf1 <- randomForest(origin~., data=train[,-which(colnames(train)=='invasiveness'
 rf1
 plot(rf1)
 rf1$importance
-
 varImpPlot(rf1, n.var=15, main='Origin ~')
 
 pred = predict(rf1, newdata=test[-which(colnames(train)=='invasiveness')]) # cross-validation
@@ -75,4 +74,3 @@ varImpPlot(rf1, n.var=15, main='Invasiveness ~')
 pred = predict(rf1, newdata=test[-which(colnames(train)=='origin')]) # cross-validation
 (cm = table(test[,'invasiveness'], pred))
 (sum(diag(cm))/sum(cm))
-
