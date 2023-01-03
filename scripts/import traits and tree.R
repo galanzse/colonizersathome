@@ -28,9 +28,9 @@ traits <- traits %>% group_by(species, family, growth_form, lifeform, origin, in
 traits2 <- read_excel("data/traits.xlsx", sheet = "traits2") %>%
   group_by(species) %>%
   summarise(LCC=mean(LCC, na.rm=T),
-            dN15=mean(dN15, na.rm=T),
-            RD=mean(RD, na.rm=T),
-            SRA=mean(SRA, na.rm=T))
+            # dN15=mean(dN15, na.rm=T),
+            # SRA=mean(SRA, na.rm=T),
+            RD=mean(RD, na.rm=T))
 traits2 <- traits2[!(traits2$species%in%california_sp),]
 traits2$species[which(!(traits2$species %in% traits$species))] # check names
 
@@ -74,7 +74,7 @@ str(traits)
 rm(reproduction, traits2, california_sp)
 
 # trait types
-v_quantitative <- c("SLA","LDMC","SRL","RDMC","dC13","LNC","height","seed_weight","onset_flowering","length_bloom","LCC","dN15","RD","SRA","numb_disp")
+v_quantitative <- c("SLA","LDMC","SRL","RDMC","dC13","LNC","height","seed_weight","onset_flowering","length_bloom","LCC","RD","numb_disp") # "dN15","SRA",
 v_qualitative <- c("lifeform","growth_form","self.compatible","archaeophyte","pollination","agochory","autochory","anemochory","hydrochory","zoochory")
   
 # outliers
@@ -83,7 +83,7 @@ temp <- temp[!(is.na(temp$value)),]
 ggplot(data=temp, aes(x=trait, y=value)) + geom_boxplot() + facet_wrap(~trait, scale="free") + xlab('')
 
 traits$dC13[traits$dC13 > -26] <- NA # remove
-traits$dN15[traits$dN15 > 10] <- NA
+# traits$dN15[traits$dN15 > 10] <- NA
 traits$LDMC[traits$LDMC > 400] <- NA
 traits$RDMC[traits$RDMC > 400] <- NA
 traits$SLA[traits$SLA > 500] <- NA

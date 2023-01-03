@@ -27,7 +27,7 @@ data$zoochory <- as.factor(data$zoochory)
 summary(data)
 
 # remove variables with too many NAs
-data <- data %>% dplyr::select(-c('RD','SRA','self.compatible'))
+data <- data %>% dplyr::select(-c('RD','SRA','dN15','self.compatible'))
 
 # random forest
 # https://towardsdatascience.com/random-forest-in-r-f66adf80ec9

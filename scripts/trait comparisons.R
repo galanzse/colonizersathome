@@ -9,12 +9,12 @@ temp <- traits %>% dplyr::select(origin, invasiveness, all_of(v_quantitative)) %
   gather(all_of(v_quantitative), key='trait', value='value') %>% na.omit()
 temp$trait <- as.factor(temp$trait)
 temp$trait <- factor(temp$trait,levels=c("onset_flowering","length_bloom","height","seed_weight",
-                                         "SLA","LDMC","LCC","LNC","dC13","dN15",
-                                         "SRL","SRA","RDMC","RD","numb_disp"))
+                                         "SLA","LDMC","LCC","LNC","dC13",
+                                         "SRL","RDMC","RD","numb_disp")) # "dN15","SRA",
 
 # origin
 ggplot(data=temp, aes(x=origin, y=value, fill=origin)) + geom_boxplot() +
-  facet_wrap(~trait, scale="free") + xlab('') + theme_classic() +
+  facet_wrap(~trait, scale="free") + xlab('') + ylab('') + theme_classic() +
   theme(legend.position='top', legend.title=element_blank(), axis.text.x=element_blank()) +
   scale_fill_manual(values=c('lightgreen','coral1'))
 
@@ -31,7 +31,7 @@ wilcox.test(traits$numb_disp ~ traits$origin)
 
 # invasiveness
 ggplot(data=temp, aes(x=invasiveness, y=value, fill=invasiveness)) + geom_boxplot() +
-  facet_wrap(~trait, scale="free") + xlab('') + theme_classic() +
+  facet_wrap(~trait, scale="free") + xlab('') + ylab('') + theme_classic() +
   theme(legend.position='top', legend.title=element_blank(), axis.text.x=element_blank()) +
   scale_fill_manual(values=c('lightgreen','coral1','gold'))
 
