@@ -43,20 +43,16 @@ data.imp$invasiveness <- data$invasiveness
 
 sqrt(ncol(data.imp)) # best ntry = 5
 
-# split data
-sample = sample.split(data.imp$origin, SplitRatio = .80)
-train = subset(data.imp, sample == TRUE)
-
 # predict origin
-rf1 <- randomForest(origin~., data=train[,-which(colnames(train)=='invasiveness')], ntree=500, mtry=5, replace=T, importance=T)
+rf1 <- randomForest(origin~., data=data.imp[,-which(colnames(data.imp)=='invasiveness')], ntree=500, mtry=5, replace=T, importance=T)
 rf1
 plot(rf1)
 rf1$importance
 varImpPlot(rf1, n.var=15, main='Origin ~')
 
 # predict invasiveness
-rf1 <- randomForest(invasiveness~., data=train[,-which(colnames(train)=='origin')], ntree=500, mtry=5, replace=T, importance=T)
-rf1
-plot(rf1)
-rf1$importance
-varImpPlot(rf1, n.var=15, main='Invasiveness ~')
+rf2 <- randomForest(invasiveness~., data=data.imp[,-which(colnames(data.imp)=='origin')], ntree=500, mtry=5, replace=T, importance=T)
+rf2
+plot(rf2)
+rf2$importance
+varImpPlot(rf2, n.var=15, main='Invasiveness ~')
