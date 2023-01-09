@@ -45,10 +45,10 @@ traits <- merge(traits, traits2, by='species', all.x=T)
 traits <- merge(traits, reproduction, by='species', all.x=T)
 
 # check variables
-traits$origin <- as.factor(traits$origin); levels(traits$origin) <- c('colonizer','native')
-traits$origin <- factor(traits$origin, levels=c('native','colonizer'))
-traits$invasiveness <- as.factor(traits$invasiveness); levels(traits$invasiveness) <- c('invasive','native','naturalised')
-traits$invasiveness <- factor(traits$invasiveness, levels=c('native','naturalised','invasive'))
+traits$origin <- as.factor(traits$origin); levels(traits$origin) <- c('coloniser','non-coloniser')
+traits$origin <- factor(traits$origin, levels=c('non-coloniser','coloniser'))
+traits$invasiveness <- as.factor(traits$invasiveness); levels(traits$invasiveness) <- c('invasive','non-coloniser','naturalised')
+traits$invasiveness <- factor(traits$invasiveness, levels=c('non-coloniser','naturalised','invasive'))
 
 table(traits$origin)
 table(traits$invasiveness)

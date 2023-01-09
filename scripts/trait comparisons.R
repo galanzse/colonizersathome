@@ -21,7 +21,7 @@ ggplot(data=temp, aes(x=origin, y=value, fill=origin)) + geom_boxplot() +
 # sign
 for (tr in v_quantitative) {
   temp2 <- na.omit(traits[,c(tr,'origin')])
-  temp2 <- t.test(temp2[temp2$origin=='native',tr], temp2[temp2$origin=='colonizer',tr])
+  temp2 <- t.test(temp2[temp2$origin=='non-coloniser',tr], temp2[temp2$origin=='coloniser',tr])
   print(paste('The p-value of', tr, 'is', round(temp2$p.value,3)))
 }
 
@@ -65,7 +65,7 @@ table(traits$zoochory, traits$invasiveness) %>% chisq.test()
 # table
 phy_origin <- matrix(ncol=8, nrow=length(v_quantitative))
 rownames(phy_origin) <- v_quantitative
-colnames(phy_origin) <- c('F','dfgroup','dfresiduals','p','p.phy','natives','naturalised','invasive')
+colnames(phy_origin) <- c('F','dfgroup','dfresiduals','p','p.phy','non-coloniser','naturalised','invasive')
 
 for (tr in v_quantitative) {
   # filter data
@@ -80,7 +80,7 @@ for (tr in v_quantitative) {
   names(group) <- temp$tree_species
   
   # run analysis
-  # print(tr)
+  print(tr)
   t1 <- aov.phylo(dat ~ group, keep.tip(plant.tree, temp$tree_species))
   t2 <- anova(t1)
   
@@ -90,7 +90,7 @@ for (tr in v_quantitative) {
   phy_origin[tr,'dfresiduals'] <- t2$Df[2]
   phy_origin[tr,'p'] <- t2$`Pr(>F)`[1]
   phy_origin[tr,'p.phy'] <- NA
-  phy_origin[tr,'natives'] <- t1$coefficients['(Intercept)']
+  phy_origin[tr,'non-coloniser'] <- t1$coefficients['(Intercept)']
   phy_origin[tr,'naturalised'] <- sum(t1$coefficients[c(1,2)])
   phy_origin[tr,'invasive'] <- sum(t1$coefficients[c(1,3)])
   

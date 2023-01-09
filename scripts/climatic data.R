@@ -2,6 +2,7 @@
 library(terra)
 library(mapSpain)
 library(geometry)
+library(ggpubr)
 source('scripts/import traits and tree.R')
 occurrences <- read.csv("results/occurrences.txt", sep="")
 myoccurrences_df <- read.csv("results/myoccurrences_df.txt", sep="")
@@ -79,17 +80,29 @@ for (i in 1:nrow(traits)) {
 # save
 write.table(traits, 'results/trait_final.txt')
 
+lm(log(traits$counts) ~ traits$origin) %>% aov() %>% TukeyHSD(conf.level=.95)
+lm(traits$climatic_ric ~ traits$origin) %>% aov() %>% TukeyHSD(conf.level=.95)
+lm(traits$climatic_div ~ traits$origin) %>% aov() %>% TukeyHSD(conf.level=.95)
+
 lm(log(traits$counts) ~ traits$invasiveness) %>% aov() %>% TukeyHSD(conf.level=.95)
 lm(traits$climatic_ric ~ traits$invasiveness) %>% aov() %>% TukeyHSD(conf.level=.95)
 lm(traits$climatic_div ~ traits$invasiveness) %>% aov() %>% TukeyHSD(conf.level=.95)
 
-temp <- traits[,c('origin','invasiveness','counts','climatic_div','climatic_ric')] %>% na.omit()
-temp <- temp %>% pivot_longer(3:5)
+temp <- traits[,c('origin','origin','invasiveness','counts','climatic_div','climatic_ric')] %>% na.omit()
+temp <- temp %>% pivot_longer(4:6)
 temp$invasiveness <- as.factor(temp$invasiveness)
+temp$origin <- as.factor(temp$origin)
 temp$name <- as.factor(temp$name)
 temp$name <- factor(temp$name, levels=c("counts","climatic_ric","climatic_div"))
 levels(temp$name) <- c('frequency','climatic niche richness','climatic niche diversity')
-ggplot(aes(x=invasiveness, y=value, fill=invasiveness), data=temp) + geom_boxplot() +
+
+g1 <- ggplot(aes(y=value, fill=origin), data=temp) + geom_boxplot() +
   facet_wrap(~name, scales='free_y') + theme_classic() + xlab('') + ylab('') +
   theme(legend.position='top', legend.title=element_blank(), axis.text.x=element_blank()) +
   scale_fill_manual(values=c('lightgreen','coral1','gold'))
+g2 <- ggplot(aes(y=value, fill=invasiveness), data=temp) + geom_boxplot() +
+  facet_wrap(~name, scales='free_y') + theme_classic() + xlab('') + ylab('') +
+  theme(legend.position='top', legend.title=element_blank(), axis.text.x=element_blank()) +
+  scale_fill_manual(values=c('lightgreen','coral1','gold'))
+
+ggarrange(g1, g2, nrow=2)
