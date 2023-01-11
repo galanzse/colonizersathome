@@ -10,12 +10,11 @@ str(data)
 # traits to analyse: remove correlated and little significant traits, and traits with many NAs
 colnames(data)
 
-# pairs(data[,c("SLA","LDMC","SRL","RDMC","dC13","height","seed_weight","onset_flowering","length_bloom","LCC","RD")], upper.panel=NULL)
+pairs(data[,c("SLA","LDMC","SRL","RDMC","dC13","height","seed_weight","onset_flowering","length_bloom","CN","RD")], upper.panel=NULL)
 colSums(is.na(data))
-v_traits <- c("growth_form","family","lifeform","SLA","SRL","RDMC","dC13","height","seed_weight","onset_flowering","length_bloom","LCC","clonality","pollination","agochory","autochory","anemochory","hydrochory","zoochory","numb_disp","counts","climatic_div","climatic_ric")
+v_traits <- c("growth_form","family","lifeform","SLA","SRL","RDMC","dC13","height","seed_weight","onset_flowering","length_bloom","CN","pollination","agochory","autochory","anemochory","hydrochory","zoochory","numb_disp","counts","climatic_div","climatic_ric")
 
 data <- data %>% dplyr::select(c('origin','invasiveness',all_of(v_traits))) %>% filter(!(is.na(pollination)))
-data$clonality[is.na(data$clonality)] <- 0
 
 # format variables
 data$family <- as.factor(data$family)
@@ -23,7 +22,6 @@ data$growth_form <- as.factor(data$growth_form)
 data$lifeform <- as.factor(data$lifeform)
 data$origin <- as.factor(data$origin)
 data$invasiveness <- as.factor(data$invasiveness)
-data$clonality <- as.factor(data$clonality)
 data$pollination <- as.factor(data$pollination)
 data$agochory <- as.factor(data$agochory)
 data$autochory <- as.factor(data$autochory)

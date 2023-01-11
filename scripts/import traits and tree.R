@@ -18,7 +18,8 @@ traits <- traits %>% group_by(species, family, growth_form, lifeform, origin, in
             SRL=median(SRL, na.rm=T),
             RDMC=median(RDMC, na.rm=T),
             dC13=median(dC13, na.rm=T),
-            LNC=median(LNC, na.rm=T),
+            CN=median(CN, na.rm=T),
+            # LNC=median(LNC, na.rm=T),
             height=median(height, na.rm=T),
             seed_weight=median(seed_weight, na.rm=T),
             onset_flowering=median(onset_flowering, na.rm=T),
@@ -27,7 +28,7 @@ traits <- traits %>% group_by(species, family, growth_form, lifeform, origin, in
 # add traits previously unused
 traits2 <- read_excel("data/traits.xlsx", sheet = "traits2") %>%
   group_by(species) %>%
-  summarise(LCC=mean(LCC, na.rm=T),
+  summarise(# LCC=mean(LCC, na.rm=T),
             # dN15=mean(dN15, na.rm=T),
             # SRA=mean(SRA, na.rm=T),
             RD=mean(RD, na.rm=T))
@@ -74,7 +75,7 @@ str(traits)
 rm(reproduction, traits2, california_sp)
 
 # trait types
-v_quantitative <- c("SLA","LDMC","SRL","RDMC","dC13","LNC","height","seed_weight","onset_flowering","length_bloom","LCC","RD","numb_disp") # "dN15","SRA",
+v_quantitative <- c("SLA","LDMC","SRL","RDMC","dC13","CN","height","seed_weight","onset_flowering","length_bloom","RD","numb_disp") # "dN15","SRA",
 v_qualitative <- c("lifeform","growth_form","self.compatible","archaeophyte","pollination","agochory","autochory","anemochory","hydrochory","zoochory")
   
 # outliers

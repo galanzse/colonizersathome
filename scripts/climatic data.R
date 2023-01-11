@@ -90,11 +90,11 @@ lm(traits$climatic_div ~ traits$invasiveness) %>% aov() %>% TukeyHSD(conf.level=
 
 temp <- traits[,c('origin','origin','invasiveness','counts','climatic_div','climatic_ric')] %>% na.omit()
 temp <- temp %>% pivot_longer(4:6)
-temp$invasiveness <- as.factor(temp$invasiveness)
-temp$origin <- as.factor(temp$origin)
+temp$invasiveness <- as.factor(temp$invasiveness); temp$invasiveness <- factor(temp$invasiveness, levels=c('non-coloniser','naturalised','invasive'))
+temp$origin <- as.factor(temp$origin); temp$origin <- factor(temp$origin, levels=c('non-coloniser','coloniser'))
 temp$name <- as.factor(temp$name)
 temp$name <- factor(temp$name, levels=c("counts","climatic_ric","climatic_div"))
-levels(temp$name) <- c('frequency','climatic niche richness','climatic niche diversity')
+levels(temp$name) <- c('frequency','climatic richness','climatic diversity')
 
 g1 <- ggplot(aes(y=value, fill=origin), data=temp) + geom_boxplot() +
   facet_wrap(~name, scales='free_y') + theme_classic() + xlab('') + ylab('') +

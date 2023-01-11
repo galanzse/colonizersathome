@@ -9,7 +9,7 @@ temp <- traits %>% dplyr::select(origin, invasiveness, all_of(v_quantitative)) %
   gather(all_of(v_quantitative), key='trait', value='value') %>% na.omit()
 temp$trait <- as.factor(temp$trait)
 temp$trait <- factor(temp$trait,levels=c("onset_flowering","length_bloom","height","seed_weight",
-                                         "SLA","LDMC","LCC","LNC","dC13",
+                                         "SLA","LDMC","CN","dC13",
                                          "SRL","RDMC","RD","numb_disp")) # "dN15","SRA",
 
 # origin
@@ -70,13 +70,13 @@ colnames(phy_origin) <- c('F','dfgroup','dfresiduals','p','p.phy','non-coloniser
 for (tr in v_quantitative) {
   # filter data
   temp <- traits[,c(tr,'invasiveness','tree_species')] %>% na.omit()
-  colnames(temp) <- c('trait','origin','tree_species')
+  colnames(temp) <- c('trait','invasiveness','tree_species')
   if (tr %in% c('onset_flowewing', 'length_bloom')) {  temp$trait <- log(temp$trait) }
   
   # format data
   dat <- temp$trait
   names(dat) <- temp$tree_species
-  group <- temp$origin
+  group <- temp$invasiveness
   names(group) <- temp$tree_species
   
   # run analysis
