@@ -93,7 +93,7 @@ traits$height <- log(traits$height)
 traits$seed_weight <- log(traits$seed_weight)
 
 # pairs
-pairs(traits[,v_quantitative], lower.panel=NULL)
+# pairs(traits[,v_quantitative], lower.panel=NULL)
 
 
 # create new variable to match traits and tree species' names
@@ -157,9 +157,9 @@ traits$tree_species[traits$tree_species=="Capsella_rubella"] <- "Capsella_bursa-
 plant.tree <- keep.tip(phy=plant.tree, tip=traits$tree_species)
 
 # plot
-plant.tree2 <- plant.tree
-plant.tree2$tip.label <- traits$species[match(plant.tree2$tip.label, traits$tree_species)] # original names
-geo <- factor(traits$invasiveness[match(plant.tree2$tip.label, traits$species)]) # colors
-mycol <- c('lightgreen','coral1','gold')[geo]
-par(mar=c(0,0,0,0))
-plot(plant.tree2,  tip.color=mycol, cex=0.35)
+# plant.tree2 <- plant.tree
+# plant.tree2$tip.label <- traits$species[match(plant.tree2$tip.label, traits$tree_species)] # original names
+# geo <- factor(traits$invasiveness[match(plant.tree2$tip.label, traits$species)]) # colors
+# mycol <- c('lightgreen','coral1','gold')[geo]
+# par(mar=c(0,0,0,0))
+# plot(plant.tree2,  tip.color=mycol, cex=0.35)

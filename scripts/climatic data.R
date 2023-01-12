@@ -3,6 +3,8 @@ library(terra)
 library(mapSpain)
 library(geometry)
 library(ggpubr)
+library(vegan)
+library(factoextra)
 source('scripts/import traits and tree.R')
 occurrences <- read.csv("results/occurrences.txt", sep="")
 myoccurrences_df <- read.csv("results/myoccurrences_df.txt", sep="")
@@ -35,9 +37,9 @@ myoccurrences_pt <- myoccurrences_pt %>% terra::crop(andalucia_v)
 myoccurrences_df <- myoccurrences_pt %>% as.data.frame(geom='xy')
 
 # plot
-plot(andalucia_r, legend=F)
-lines(andalucia_v)
-points(myoccurrences_pt)
+# plot(andalucia_r, legend=F)
+# points(myoccurrences_pt)
+# lines(andalucia_v, col='red')
 
 # retain one observation per grid
 myoccurrences_df$cell <- terra::extract(x=andalucia_r, y=myoccurrences_pt, cells=T)[,'cell']
@@ -63,6 +65,8 @@ var_in <- c('species','bio_1','bio_5','bio_7','bio_12','bio_14','bio_15')
 climatic <- climatic[,var_in] %>% na.omit()
 climatic_pca <- prcomp(climatic[,-1], scale=T, center=T)
 summary(climatic_pca)
+eigenvals(climatic_pca)
+# fviz_pca_biplot(climatic_pca, geom="point")
 climatic_pca <- climatic_pca$x[,1:3] %>% as.data.frame()
 climatic_pca$species <- climatic$species
 
