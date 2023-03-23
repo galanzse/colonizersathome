@@ -21,7 +21,7 @@ traits <- traits %>% group_by(species, family, growth_form, lifeform, origin, in
             CN=median(CN, na.rm=T),
             # LNC=median(LNC, na.rm=T),
             height=median(height, na.rm=T),
-            seed_weight=median(seed_weight, na.rm=T),
+            seed_mass=median(seed_mass, na.rm=T),
             onset_flowering=median(onset_flowering, na.rm=T),
             length_bloom=median(length_bloom, na.rm=T))
 
@@ -75,7 +75,7 @@ str(traits)
 rm(reproduction, traits2, california_sp)
 
 # trait types
-v_quantitative <- c("SLA","LDMC","SRL","RDMC","dC13","CN","height","seed_weight","onset_flowering","length_bloom","RD","numb_disp") # "dN15","SRA",
+v_quantitative <- c("SLA","LDMC","SRL","RDMC","dC13","CN","height","seed_mass","onset_flowering","length_bloom","RD","numb_disp") # "dN15","SRA",
 v_qualitative <- c("lifeform","growth_form","self.compatible","archaeophyte","pollination","agochory","autochory","anemochory","hydrochory","zoochory")
   
 # outliers
@@ -90,7 +90,7 @@ traits$RDMC[traits$RDMC > 400] <- NA
 traits$SLA[traits$SLA > 500] <- NA
 traits$SRL[traits$SRL > 17000] <- NA
 traits$height <- log(traits$height)
-traits$seed_weight <- log(traits$seed_weight)
+traits$seed_mass <- log(traits$seed_mass)
 
 # pairs
 # pairs(traits[,v_quantitative], lower.panel=NULL)
@@ -155,6 +155,7 @@ traits$tree_species[traits$tree_species=="Capsella_rubella"] <- "Capsella_bursa-
 
 # prune tree
 plant.tree <- keep.tip(phy=plant.tree, tip=traits$tree_species)
+write.tree(plant.tree, 'results/mytree.tre')
 
 # plot
 # plant.tree2 <- plant.tree
@@ -163,3 +164,4 @@ plant.tree <- keep.tip(phy=plant.tree, tip=traits$tree_species)
 # mycol <- c('lightgreen','coral1','gold')[geo]
 # par(mar=c(0,0,0,0))
 # plot(plant.tree2,  tip.color=mycol, cex=0.35)
+
